@@ -22,7 +22,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "scheduler.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -56,7 +56,9 @@ static void MX_GPIO_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+void led1_test(){
+	HAL_GPIO_TogglePin(LED_RED_GPIO_Port, LED_RED_Pin);
+}
 /* USER CODE END 0 */
 
 /**
@@ -89,16 +91,19 @@ int main(void)
   MX_TIM2_Init();
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
-
+  HAL_TIM_Base_Start_IT(&htim2);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  // Because this is function pointer so no () notation if we call function it should be led1_test()
+  SCH_Add_Task(led1_test, 100, 100);
   while (1)
   {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+	  SCH_Dispatch_Tasks();
   }
   /* USER CODE END 3 */
 }
@@ -208,7 +213,15 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-
+int counter= 0;
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim){
+	SCH_Update();
+	counter++;
+	if(counter >=100){
+		counter =0;
+		HAL_GPIO_TogglePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin);
+	}
+}
 /* USER CODE END 4 */
 
 /**
