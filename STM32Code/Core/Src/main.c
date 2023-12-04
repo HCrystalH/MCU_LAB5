@@ -96,15 +96,14 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
 
 	}
 }
-void uart_communication_task(){
-	uart_communication_fsm();
-}
-void lab4(){
+
+void lab4(void){
 	ADC_Value = HAL_ADC_GetValue(&hadc1);
 	if(buffer_flag == 1){
 		command_parser_fsm();
 		buffer_flag = 0;
 	}
+	uart_communication_fsm();
 }
 
 /* USER CODE END 0 */
@@ -151,14 +150,14 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   // Because this is function pointer so no () notation if we call function it should be led1_test()
-//  uint32_t id = SCH_Add_Task(led1_test, 100, 100);
-//  SCH_Delete_Task(id);
-  int id1 =SCH_Add_Task(led1_test, 100, 50);
-  int id2 =SCH_Add_Task(led2_test, 200, 100);
-  int id3 =SCH_Add_Task(led3_test, 300, 150);
-  int id4 =SCH_Add_Task(LED_RED_test, 400, 200);
-  int id5 =SCH_Add_Task(LED_GREEN_test, 500, 250);
-  int counter =0;
+  SCH_Init();
+  SCH_Add_Task(led1_test, 200, 0);	// 1-shot test
+  SCH_Add_Task(led2_test, 100, 100);
+  SCH_Add_Task(led3_test, 100, 150);
+  SCH_Add_Task(LED_RED_test, 100, 200);
+  SCH_Add_Task(LED_GREEN_test, 100, 250);
+
+//  SCH_Add_Task(lab4, 1, 100);
   while (1)
   {
     /* USER CODE END WHILE */
@@ -171,8 +170,6 @@ int main(void)
 //	  }
 //
 //	  uart_communication_fsm();
-//	  counter++;
-
 	  SCH_Dispatch_Tasks();
 
   }

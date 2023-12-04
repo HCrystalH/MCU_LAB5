@@ -10,14 +10,25 @@
 
 // Should be declare here to avoid user can access and change data structure in main.c
 sTasks SCH_tasks_G[SCH_MAX_TASKS];
-uint8_t current_index_task =0;
+uint32_t current_index_task =0;
 
 void SCH_Init(void){
-
 	for(unsigned char i=0;i<SCH_MAX_TASKS; i++){
 		SCH_Delete_Task(i);
 	}
 }
+
+//
+//void SCH_Update(void){
+//	for(int i = 0; i < current_index_task; i++){
+//		if (SCH_tasks_G[i].Delay > 0){
+//			SCH_tasks_G[i].Delay --;
+//		}else{
+//			SCH_tasks_G[i].Delay = SCH_tasks_G[i].Period;
+//			SCH_tasks_G[i].Runme += 1;
+//		}
+//	}
+//}
 
 uint32_t SCH_Add_Task(void (*pFunction) (), uint32_t DELAY, uint32_t PERIOD){
 	uint32_t index = 0;
@@ -34,6 +45,8 @@ uint32_t SCH_Add_Task(void (*pFunction) (), uint32_t DELAY, uint32_t PERIOD){
 	SCH_tasks_G[index].Period = PERIOD;
 	SCH_tasks_G[index].Runme = 0;
 
+	SCH_tasks_G[index].TaskID = current_index_task;
+	current_index_task++;
 	return index;
 }
 

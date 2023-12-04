@@ -20,6 +20,7 @@ typedef struct{
 
 #define SCH_MAX_TASKS	40
 
+extern
 void SCH_Init(void);
 
 // SetTimer

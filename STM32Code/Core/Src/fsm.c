@@ -86,6 +86,11 @@ void command_parser_fsm(){
 			break;
 		}
 }
+void display(){
+	previous = ADC_Value;
+	HAL_UART_Transmit(&huart2, (void *)response, sprintf(response, "!ADC= %ld# \r\n", ADC_Value), 1000);
+	HAL_GPIO_TogglePin(LED_GREEN_GPIO_Port, LED_RED_Pin);
+}
 void uart_communication_fsm(){
 	switch(command_flag){
 	case SENDING:
@@ -96,6 +101,8 @@ void uart_communication_fsm(){
 			setTimer2(100);
 //			timerflag2 = 0;
 		}
+//		SCH_Add_Task(display, 100, 100);
+
 		break;
 	case STOP_SEND:
 		if(timerflag1 == 1){
